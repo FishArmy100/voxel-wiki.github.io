@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preload" as="font" href="https://voxel.wiki/fonts/vendor/jost/jost-v4-latin-regular.woff2" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="https://voxel.wiki/fonts/vendor/jost/jost-v4-latin-700.woff2"  type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="https://voxel.wiki/fonts/vendor/jost/jost-v4-latin-italic.woff2"  type="font/woff2" crossorigin>
+
+
+<link rel="stylesheet" href="https://voxel.wiki/main.css">
+<link rel="stylesheet" href="https://voxel.wiki/overrides.css">
+
+
+
+  
+  
+    
+  
+
+  
+  
+    
+    
+  
+  
+  
+    
+  
+  
+  
+  
+    
+  
+  
+  
+
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+
+	
+
+
+	
+
+<title>Noise - Voxel.Wiki</title>
+<meta name="description" content="Fields of pseudorandom numbers.">
+<link rel="canonical" href="https://voxel.wiki/wiki/noise/">
+
+
+
+
+
+
+  
+
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+    
+      
+      
+        
+        
+        
+          
+          
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://voxel.wiki/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Wiki",
+            "item": "https://voxel.wiki/wiki/"
+          },
+        
+      
+        
+        
+        
+          
+          
+        
+        
+        
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  3 ,
+            "name": "Noise",
+            "item": "https://voxel.wiki/wiki/noise/"
+          },
+        
+      
+    
+      null
+    ]
+  }
+</script>
+
+
+
+
+
+
+  <meta name="theme-color" content="#fff">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://voxel.wiki/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://voxel.wiki/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://voxel.wiki/favicon-16x16.png">
+  
+    <link rel="manifest" href="https://voxel.wiki/site.webmanifest" crossorigin>
+  
+
+
+  
+    
+      <!-- KaTeX -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" media="print" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous" onload="this.media='all'">
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    
+  
+
+</head>
+
+  
+    
+  
+
+<body class="page single">
+  
+    
+<div class="header-bar fixed-top"></div>
+<header class="navbar fixed-top navbar-expand-md navbar-light">
+	<div class="container">
+		<input class="menu-btn order-0" type="checkbox" id="menu-btn">
+		<label class="menu-icon d-md-none" for="menu-btn"><span class="navicon"></span></label>
+		<a class="navbar-brand order-1 order-md-0 me-auto" href="https://voxel.wiki/">Voxel.Wiki</a>
+		<button id="mode" class="btn btn-link order-2 order-md-4" type="button" aria-label="Toggle mode">
+			<span class="toggle-dark"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
+			<span class="toggle-light"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
+		</button>
+		<ul class="navbar-nav fork-me order-3 order-md-5">
+			
+				
+					<li class="nav-item">
+						<a class="nav-link" href="https://github.com/voxel-wiki/voxel-wiki.github.io"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a>
+					</li>
+				
+					<li class="nav-item">
+						<a class="nav-link" href="http://voxelgamedev.com/"><svg width="20" height="20" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0)"><path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="currentColor"/></g><defs><clipPath id="clip0"><rect width="71" height="55" fill="none"/></clipPath></defs></svg><span class="ms-2 visually-hidden">Discord</span></a>
+					</li>
+				
+			
+		</ul>
+		<div class="collapse navbar-collapse order-4 order-md-1">
+			<ul class="navbar-nav main-nav me-auto order-5 order-md-2">
+				
+					
+				
+				
+				
+					
+						<li class="nav-item">
+							<a class="nav-link" href="https://voxel.wiki/categories/">Categories</a>
+						</li>
+					
+						<li class="nav-item">
+							<a class="nav-link" href="https://voxel.wiki/wiki/projects/">Projects</a>
+						</li>
+					
+				
+			</ul>
+			<div class="break order-6 d-md-none"></div>
+			
+				<form class="navbar-form flex-grow-1 order-7 order-md-3">
+					<input id="userinput" class="form-control is-search" type="search" placeholder="Search docs..."
+						aria-label="Search docs..." autocomplete="off">
+					<div id="suggestions" class="shadow bg-white rounded"></div>
+				</form>
+			
+		</div>
+	</div>
+</header>
+
+  
+
+  
+<div class="wrap container" role="document">
+  <div class="content">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-10 col-xxl-8">
+        
+            <nav style="display:flex;flex-flow:row wrap;max-width:100%;font-size:0.9rem">
+                
+                
+                    
+                    <a href="/categories/procgen">Procgen</a>
+                
+                    <span>,&nbsp;</span>
+                    <a href="/categories/math">Math</a>
+                
+                <span style="flex-grow:1"></span>
+                
+                
+                    &emsp;<a href="/tags/procgen" style="opacity:0.5">#procgen</a>
+                
+                    &emsp;<a href="/tags/design" style="opacity:0.5">#design</a>
+                
+                    &emsp;<a href="/tags/math" style="opacity:0.5">#math</a>
+                
+                    &emsp;<a href="/tags/noise" style="opacity:0.5">#noise</a>
+                
+            </nav>
+        
+        <article>
+          <div class="page-header">
+            <h1>Noise</h1>
+          </div>
+          
+          <figure itemscope itemtype="http://schema.org/MediaObject" class="float"><img itemprop="contentUrl" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Pink_red_liquid_using_perlin_noise_%2B_bump_%2B_coloring_%282415197699%29.png/240px-Pink_red_liquid_using_perlin_noise_%2B_bump_%2B_coloring_%282415197699%29.png">
+<figcaption><span class=caption itemprop="caption"><p>Pink/Red Liquid using Perlin Noise</p>
+</span><span class=author itemprop="author"><p><a href="https://www.flickr.com/people/12739382@N04">Simon Strandgaard</a></p>
+</span><span class=license itemprop="license"><p><a href="https://en.wikipedia.org/wiki/File:Pink_red_liquid_using_perlin_noise_%2B_bump_%2B_coloring_(2415197699).png">CC-BY-2.0</a></p>
+</span></figcaption>
+</figure>
+<p>The most common and useful approach when procedurally generating <em>anything</em>, is to use <strong>noise</strong>: randomly generated numbers.</p>
+<p>Of course, purely random numbers are kind of useless to us,
+as we need to be able to test things (i.e.: <a href="https://en.wikipedia.org/wiki/Reproducibility">reproducibility</a>),
+so we tend to use <strong><a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">Pseudorandom Number Generators</a></strong>
+that take some kind of <em>seed</em> and give us <em>seemingly random</em> numbers in return.</p>
+<p>Noise can be used in many, <em>many</em>, <em><strong>many</strong></em> ways, such as...</p>
+<ul>
+<li>Generating textures from scratch</li>
+<li>Generating terrain by interpreting noise as height</li>
+<li>Generating terrain via voxel density volumes</li>
+<li>Creating interesting visual effects</li>
+<li>Enhancing existing textures with graininess;<br />
+e.g to make it look old/used/worn.</li>
+<li>And so, <em>so</em>, <em>much</em>, <em><strong>more</strong></em>...<br />
+<small>Seriously, we couldn't list them, even if we tried!</small></li>
+</ul>
+<p>Noise-based generation generally happens via a <strong>noise pipeline</strong>, consisting of three parts:</p>
+<ul>
+<li>An initial <a href="https://voxel.wiki/wiki/noise/#noise-functions">noise function</a>.</li>
+<li>Any number of <a href="https://voxel.wiki/wiki/noise/#noise-operations">noise operations</a>.</li>
+<li>Final <a href="https://voxel.wiki/wiki/noise/#noise-interpretation">noise interpretation</a>.</li>
+</ul>
+<div class='notice info'><p>This is just a <em>basic framework</em> to get the concept across;
+it can be changed and extended in a variety of ways once understood.
+<br>There are no hard rules... be creative!</p>
+</div>
+<h2 id="noise-functions">Noise Functions</h2>
+<p>All uses of noise begin with a <strong>noise function</strong>.</p>
+<p>That is, a function taking an ℕ-dimensional <strong>sample position</strong>
+and returning a <strong>noise sample</strong> in the <code>[-1, +1]</code>-range.</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#65737e;">/// An abstract noise function.
+</span><span style="color:#65737e;">/// 
+</span><span style="color:#65737e;">/// - Takes a position.
+</span><span style="color:#65737e;">/// - Returns a number.
+</span><span style="color:#65737e;">/// - May contain math.
+</span><span style="color:#65737e;">/// - A *lot* of math.
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">noise</span><span>(</span><span style="color:#bf616a;">position</span><span>: Vecℕ) -&gt; </span><span style="color:#b48ead;">f32</span><span>;
+</span></code></pre>
+<p>Calling such a function means <strong>to sample the noise function</strong>.</p>
+<div class='notice info'><p><strong>A note on number ranges:</strong></p>
+<p>While most libraries return numbers in the <code>[-1, +1]</code>-range, some may use the <code>[0, +1]</code>-range, or something else entirely even; read the documentation, or code, to make sure!</p>
+<p>Though conversions are usually rather easy; for example:</p>
+<ul>
+<li>
+<p>To turn <code>[0, +1]</code> into <code>[-1, +1]</code>:<br />
+Multiply by two and subtract one: <code>v * 2 - 1</code></p>
+</li>
+<li>
+<p>To turn <code>[-1, +1]</code> into <code>[0, +1]</code>:<br />
+Add one and divide by two: <code>(v + 1) / 2</code><br />
+<small>Mind the parenthesis!</small></p>
+</li>
+</ul>
+</div>
+<p>Now with that preface out of the way, let's proceed to the actual <strong>noise functions</strong>!</p>
+<h3 id="white-noise-value-noise">White Noise &amp; Value Noise</h3>
+<figure itemscope itemtype="http://schema.org/MediaObject" class="float"><img itemprop="contentUrl" src="https://upload.wikimedia.org/wikipedia/commons/3/30/256x256_Dissolve_Noise_Texture.png">
+<figcaption><span class=caption itemprop="caption"><p>White Noise</p>
+</span><span class=author itemprop="author"><p>Spamrakuen</p>
+</span><span class=license itemprop="license"><p><a href="https://commons.wikimedia.org/wiki/File:256x256_Dissolve_Noise_Texture.png">CC0</a></p>
+</span></figcaption>
+</figure>
+<p>If you have ever seen a Television that receives it's video as <a href="https://en.wikipedia.org/wiki/Analog_signal">analog signals</a>
+via an antenna, you <em>might</em> have seen what happens when the antenna isn't receiving anything: The screen becomes a sea of <a href="https://en.wikipedia.org/wiki/Noise_(video)">noise</a>; commonly referred to as <strong>white noise</strong>.</p>
+<p><strong>White noise</strong> by itself is completely random, with no discernible patterns between/across the samples, which isn't really useful by itself.</p>
+<p>However, take that very noise and scale it up/zoom into it, <a href="https://en.wikipedia.org/wiki/Linear_interpolation">linearly interpolating</a> between the individual samples, and it will begin to resemble something much more interesting: <strong>value noise</strong>.</p>
+<!--<div class='notice info'><p>Linear interpolation produces a texture of poor quality; so alternatively, there is the option of <strong>cubic value noise</strong>, which uses <strong>cubic interpolation</strong>.</p>
+</div>
+-->
+<p>Unfortunately, while value noise tends to be ludicrously fast to generate, it's <em>quality</em> isn't particularly great due to <em>linear artifacts</em>. When used for terrain generation, these artifacts will cause strange patterns to emerge, which is absolutely <em>not</em> what one wants, so we will have to find something better than value noise...</p>
+<h3 id="perlin-noise">Perlin Noise</h3>
+<figure itemscope itemtype="http://schema.org/MediaObject" class="float"><img itemprop="contentUrl" src="https://upload.wikimedia.org/wikipedia/commons/8/88/Perlin_noise_example.png">
+<figcaption><span class=caption itemprop="caption"><p>Perlin Noise</p>
+</span><span class=author itemprop="author"><p><a href="https://commons.wikimedia.org/wiki/User:Lord_Belbury">Lord Belbury</a></p>
+</span><span class=license itemprop="license"><p><a href="https://commons.wikimedia.org/wiki/File:Perlin_noise_example.png">CC0</a></p>
+</span></figcaption>
+</figure>
+<p>Now, again, <strong>value noise</strong> is extremely simple and fast to generate, but unfortunately has linear artifacts... which is where <strong><a href="https://en.wikipedia.org/wiki/Perlin_noise">Perlin noise</a></strong> comes in!</p>
+<p>Invented in the early 1980s by <a href="https://en.wikipedia.org/wiki/Ken_Perlin">Ken Perlin</a>, Perlin noise improves on value noise by interpolating between randomly generated <em>gradients</em> on a grid, instead of plain random values.</p>
+<div style="clear:both"></div>
+<div class='notice info'><p>Explaining the exact algorithm is, (un)fortunately, out-of-scope for this article;
+since there are <a href="https://github.com/topics/perlin"><em>many</em></a> implementations of it, finding one should not be a problem.</p>
+</div>
+<!--
+  * So, instead of generating random pixels, Ken generated random vectors on a grid. Vectors are arrows with a magnitude (arrow length).
+  * He placed each random arrow on a corner in the grid, and treated them as black-and-white gradients.
+  * Then, for any pixel inside a grid box, he interpolated between the 4 surrounding gradients to get the final color.
+  * ... (what am I missing?)
+  * This reduced some of the linear artifacts.
+-->
+<p>The 'blobby' nature of Perlin already makes it perfect for many use cases, though if one looks closely there appear to be... straight lines? Let's keep going!</p>
+<h3 id="simplex-noise">Simplex Noise</h3>
+<p>Now, is Perlin noise perfect? Sadly, no:
+It too has artifacts, caused by the sampling being done on a regular grid,
+making values appear to be axis-aligned and/or biased on the diagonal.</p>
+<p>This is visible in the top left of the previous example image as a straight 'hill'.</p>
+<div class='notice info'><p>If you are interested in the inner workings and actual reasons behind these artifacts,
+we <em>highly recommend</em> reading KdotJPG's excellent blog post <a href="https://noiseposti.ng/posts/2022-01-16-The-Perlin-Problem-Moving-Past-Square-Noise.html">The Perlin Problem: Moving Past Square Noise</a> for more!</p>
+</div>
+<!--There are two ways to fix this issue: Either by *rotating the domain* or using a *different noise algorithm*.
+We will cover the latter here.-->
+<p>Thankfully, Ken Perlin noticed the issue circa 2001 and remedied this by coming up with a new noise function: <strong>simplex noise</strong>!</p>
+<p>The solution is surprisingly simple: Instead of sampling and interpolating the random numbers in a <em>square</em> grid, he used a <em>triangular</em> ('simplex') grid, which has several advantages:</p>
+<ol>
+<li>The artifacts are no longer <em>visible</em>, due to the grid of pixels no longer being aligned with the grid of gradient positions.</li>
+<li>A triangle is the smallest polygon enclosing an area of two dimensional (or higher) space,
+so the algorithm only needs to evaluate and interpolate between <em>three</em> corners,
+instead of <em>four</em>, which is much faster!</li>
+<li>The algorithm can be extended into higher dimensions (3D, 4D, 5D, and higher!),
+without having to evaluate exponentially more corners, unlike Perlin noise,
+making it <em>even faster</em> in this case!</li>
+</ol>
+<p>Due to patent shenanigans, simplex noise was not possible to freely implement for quite some time,
+leading to the creation of <strong>open simplex noise</strong>. Thankfully, the patent has run out, so go forth and code!</p>
+<hr />
+<p>With that we have seen enough noise functions... on to noise operations!</p>
+<h2 id="noise-operations">Noise Operations</h2>
+<p>Noise operators are functions that accept <strong>noise modules</strong> (which are noise-functions and -operators), creating new noise modules from them. This allows for the creation of <em>much</em> more complex/detailed noise.</p>
+<p>They are split into these four categories:</p>
+<ul>
+<li>
+<p><a href="https://voxel.wiki/wiki/noise/#modifier-operations"><strong>Modifiers</strong></a>
+change the output of a noise module.</p>
+</li>
+<li>
+<p><a href="https://voxel.wiki/wiki/noise/#combiner-operations"><strong>Combiners</strong></a>
+mix the output of several noise modules.</p>
+</li>
+<li>
+<p><a href="https://voxel.wiki/wiki/noise/#selector-operations"><strong>Selectors</strong></a>
+mix the output of several noise modules,<br />
+controlled by <em>another</em> noise module.</p>
+</li>
+<li>
+<p><a href="https://voxel.wiki/wiki/noise/#transformer-operations"><strong>Transformers</strong></a>
+work with the <strong>sample positions</strong> going <em>into</em> the modules.</p>
+</li>
+</ul>
+<h3 id="modifier-operations">Modifier Operations</h3>
+<!-- Unary operations, like abs() can be run on the noise. -->
+<p>Even with just one noise sample, we can do <em>many</em> things... for example:</p>
+<ul>
+<li>Shift it by adding/subtracting</li>
+<li>Multiply it to scale its amplitude</li>
+<li>Put it through a spline or easing function</li>
+<li>Change its slope with <code>pow(v, …)</code></li>
+<li>Convert to other number ranges</li>
+<li>etc. etc.</li>
+</ul>
+<p>Here is an example of a <em>cubic easing modifier</em>, written in Rust:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#65737e;">// Assuming we already have a noise function...
+</span><span style="color:#65737e;">// - `p` is the *sample position*
+</span><span style="color:#65737e;">// - `v` is the *noise sample*, here in the [-1, +1]-range
+</span><span style="color:#b48ead;">let mut</span><span> v: </span><span style="color:#b48ead;">f32 </span><span>= </span><span style="color:#96b5b4;">noise</span><span>(p);
+</span><span>
+</span><span style="color:#65737e;">// With help from &lt;https://github.com/prideout/par/blob/master/par_easings.h&gt;,
+</span><span style="color:#65737e;">// let&#39;s apply a cubic-easing function to our noise sample!
+</span><span>
+</span><span style="color:#65737e;">// This one takes values in the [0, +1]-range...
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">ease_cubic</span><span>(</span><span style="color:#b48ead;">mut </span><span style="color:#bf616a;">t</span><span>: </span><span style="color:#b48ead;">f32</span><span>, </span><span style="color:#bf616a;">b</span><span>: </span><span style="color:#b48ead;">f32</span><span>, </span><span style="color:#bf616a;">c</span><span>: </span><span style="color:#b48ead;">f32</span><span>, </span><span style="color:#bf616a;">d</span><span>: </span><span style="color:#b48ead;">f32</span><span>) {
+</span><span>  t /= d / </span><span style="color:#d08770;">2.0</span><span>;
+</span><span>  </span><span style="color:#b48ead;">if</span><span> t &lt; </span><span style="color:#d08770;">1.0 </span><span>{
+</span><span>    </span><span style="color:#b48ead;">return</span><span> c / </span><span style="color:#d08770;">2.0 </span><span>* t * t * t + b;
+</span><span>  }
+</span><span>  
+</span><span>  t -= </span><span style="color:#d08770;">2.0</span><span>;
+</span><span>  </span><span style="color:#b48ead;">return</span><span> c / </span><span style="color:#d08770;">2 </span><span>* (t * t * t + </span><span style="color:#d08770;">2</span><span>) + b;
+</span><span>}
+</span><span>
+</span><span style="color:#65737e;">// ...so we first have to convert our sample from [-1, +1] to [0, +1]...
+</span><span>v = (v + </span><span style="color:#d08770;">1.0</span><span>) / </span><span style="color:#d08770;">2.0</span><span>;
+</span><span>
+</span><span style="color:#65737e;">// ...and then we can apply the function!
+</span><span>v = </span><span style="color:#96b5b4;">ease_cubic</span><span>(v, </span><span style="color:#d08770;">0</span><span>, </span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">1</span><span>);
+</span></code></pre>
+<p>You <em>might</em> notice that we did not define what the sample position <code>p</code> is, or where the result goes... and this is on purpose!</p>
+<p>Modifiers are <em>independent</em> of each other, so you can mix-and-match them however you like, there are no limits to your creativity here!</p>
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<h3 id="combiner-operations">Combiner Operations</h3>
+<!-- Binary operation: Noise can be combined with other noise, in a binary operation, like addition, subtraction, multiplication etc. -->
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<h3 id="selector-operations">Selector Operations</h3>
+<!-- Selection: You can generate multiple noise textures of wildly different looks, and use a 3rd noise texture to select between them. For example, for each pixel in the **selector**, any noise value higher than 0, might mean to select from the first texture, and any noise value lower than 0 might mean to select from the second. -->
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<h3 id="transformer-operations">Transformer Operations</h3>
+<!-- Noise can be zoomed in; this usually changes the **frequency** of the noise.
+  * More zoom => lower frequency. Frequency here roughly means "detail". High frequency noise has a lot of sharp edges and detail. Low frequency noise is blurred, smoothly varying. -->
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<!-- 
+### Field Operations
+Operations that work on *fields* of noise samples, instead of individual samples.
+
+- **Caching** takes the output *field* of a noise function and stores it.
+- **Subsampling** takes a cached field and samples from within it.
+
+
+
+
+    
+    
+    
+    
+
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+
+-->
+<h2 id="noise-interpretation">Noise Interpretation</h2>
+<!--
+* The individual noise values are interpreted in various ways,
+  * Such as interpreting the random noise values as colors.
+    * Either by combining 3 black-and-white single-valued noise textures into an RGB triplet for each pixel,
+    * Or by using a **transfer function**, which is an arbitrary function that interprets a number to a color. A simple transfer function can be a simple 1D texture that maps a number (such as the random number in the noise texture) to a color.
+  * Or interpreted as heights (in a heightmap),
+  * Or interpreted as _densities_ or _distances_ or something similar, in voxel volumes, depending on the volume type combined with the rendering method used.
+-->
+<p>Once you've obtained a final value from your noise evaluation, you will need to <strong>interpret</strong> it.</p>
+<p>Usually this means either putting the sample through a <a href="https://voxel.wiki/wiki/noise/#transfer-function"><strong>transfer function</strong></a>, <a href="https://voxel.wiki/wiki/noise/#thresholding"><strong>thresholding</strong></a> it or using it directly as-is.</p>
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<h3 id="transfer-function">Transfer Function</h3>
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<h3 id="thresholding">Thresholding</h3>
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+<!--
+## Designing Noise
+
+Noise is very hard to shape to the way you envision it. Therefore, it might be useful to use an existing UI or make your UI to quickly see what the noise looks like and iterate.
+
+
+### Fractal Brownian Motion
+You can add an interesting amount of detail to a noise texture, by zooming into it to varying levels, and then combining the levels. Each zoomed noise texture is called an **octave**. Typically, you'd zoom in powers of 2, so 1x zoom for the original sampling of the noise function, 2x zoom-out for the second octave, 4x zoom-out for the third octave, and so on. Typically, you'd also temper the higher frequency (zoomed-out, higher detail) octaves by scaling down their values by the same amount that it was zoomed out. This technique is called fractal Brownian motion or `fBm`.
+
+
+
+
+    
+    
+    
+    
+
+<div class='notice stub'>This section is a stub. Perhaps help us expand it?</div>
+
+
+### Large Terrain: Use Multiple Scales of Noise
+
+Heightmaps then volumes: If you are designing a large world that has terrain, use multiple scales. For example, consider generating coarse heightmaps first, then embellishing them, and only then generating 3D volumes near the ground.
+
+Generate noise more sparsely: Games like Minecraft only generate noise sparsely, and then interpolate between the generated noise. Because noise evaluation is expensive.
+
+Next section discusses separating the world into biomes for ease of design, separation of concerns, and performance.
+
+### Biomes
+
+While designing a large world, you may be tempted to create a huge hierarchy of operations on noise (combining, selecting, etc.) discussed earlier, and you may be able to generate complex terrain, however, you will find that **A.** it becomes more and more difficult to design varying terrain with a single hierarchy of noise operations, and/or **B.** the function will become so complex, that it will become very slow; further, if you think about it, often many parts of the noise operations hierarchy will not be used as they will not be selected and/or they will be multiplied by 0.
+
+As a result, designers often opt for explicitly making **biomes** first class. A biome, is a region of the terrain that has a terrain _type_, e.g Mountainous Tropical, or Tundra Plains, or Mountainous Rocky, Hilly Prairie etc.
+
+You can on a first pass, generate some kind of coarse regular or irregular grid that that will define the boundaries of various biomes regions, and then based on some rules, assign each region a predefined biome type that you design, name, and create a noise operations hierarchy for. Then within each biome, you evaluate the relevant noise hierarchy that you hand tuned to generate that biome. Since the noise operations hierarchies are now separate, they can be made much simpler.
+
+
+### Noise Zoo
+
+* Primitives:
+  * Value noise.
+  * Perlin (don't use this anymore).
+  * Simplex (prefer over Perlin).
+  * Voronoi.
+  * ...
+* Fractal Brownian Motion (`fBm`).
+* Noise Operations.
+  * Modifiers/Combinations/Transformations/Selectors: See [LibNoise modules documentation](https://libnoise.sourceforge.net/docs/modules.html).
+* Erosion?
+
+<div class='notice todo'><strong>TODO:</strong> END OF UNEDITED CONTENT</div>
+
+-->
+<h2 id="references">References</h2>
+<div class='notice todo'><strong>TODO:</strong> Add more references.</div>
+<ul>
+<li><a href="https://www.redblobgames.com/maps/terrain-from-noise/">Terrain from Noise</a></li>
+</ul>
+<h3 id="noise-libraries">Noise Libraries</h3>
+<p>Writing correct noise-generating code can be quite hard, so it is generally recommended to try using a library first...</p>
+<ul>
+<li><strong><a href="https://libnoise.sourceforge.net">libnoise</a></strong><br />
+<a href="https://libnoise.sourceforge.net/glossary/index.html">Great documentation</a>, but quite old, slow and licensed under LGPL, which is a no-go for most projects.
+Notable because it has the best documentation for organizing/conceptualizing noise primitives and various operations on noise, so it's a good idea to browse through the <a href="https://libnoise.sourceforge.net/docs/modules.html">various modules</a>.</li>
+<li><strong><a href="https://github.com/KdotJPG/OpenSimplex2">OpenSimplex2</a></strong><br />
+Various improvements over Perlin Noise and under a CC0 license.</li>
+<li><strong><a href="https://github.com/Auburn/FastNoiseLite">FastNoiseLite</a></strong><br />
+Fast noise generation with implementations in several languages, several kinds of noise and a GUI to preview noise.</li>
+<li><strong><a href="https://github.com/Auburn/FastNoise2">FastNoise2</a></strong><br />
+Newer version of <em>FastNoiseLite</em>, by the same author, written entirely in C++. One of the, if not <em>the</em>, fastest noise generation libraries.</li>
+</ul>
+<h3 id="explainer-videos">Explainer Videos</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=zXsWftRdsvU">Value Noise Explained!</a></li>
+<li><a href="https://www.youtube.com/watch?v=ZsEnnB2wrbI">How to turn a few Numbers into Worlds (Perlin Noise)</a></li>
+<li><a href="https://www.youtube.com/watch?v=sChQCdbLdHE">The Absurd Usefulness of Noise in Game Development</a></li>
+<li>...</li>
+</ul>
+
+        </article>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  
+    
+<footer class="footer text-muted">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 order-last order-lg-first">
+				<ul class="list-inline">
+					
+						<li class="list-inline-item">Powered by <a href="https://pages.github.com/">GitHub Pages</a>, <a href="https://www.getzola.org/">Zola</a> and <a href="https://github.com/aaranxu/adidoks">AdiDoks</a></li>
+					
+				</ul>
+			</div>
+			<div class="col-lg-8 order-first order-lg-last text-lg-end">
+				<ul class="list-inline">
+					
+						
+							<li class="list-inline-item"><a href="https://voxel.wiki/privacy-policy/">Privacy</a></li>
+						
+							<li class="list-inline-item"><a href="https://voxel.wiki/code-of-conduct/">Code of Conduct</a></li>
+						
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+</footer>
+
+  
+
+  
+<script type="text/javascript" src="https://voxel.wiki/js/main.js" defer></script>
+
+  <script type="text/javascript" src="https://voxel.wiki/plugins/elasticlunr.min.js" defer></script>
+  <script type="text/javascript" src="https://voxel.wiki/search_index.en.js" defer></script>
+  <script type="text/javascript" src="https://voxel.wiki/js/search.js" defer></script>
+
+  
+</body>
+</html>
